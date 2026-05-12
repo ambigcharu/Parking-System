@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <!-- Screen 1: Login / Signup -->
+ 
   <section id="screen-login" class="screen active">
     <div class="card">
       <h2 id="login-title">Login - Smart Parking</h2>
@@ -33,7 +33,6 @@
     </div>
   </section>
 
-  <!-- Screen 2: Vehicle form -->
   <section id="screen-vehicle" class="screen">
     <div class="card">
       <h2>Vehicle &amp; Booking Details</h2>
@@ -63,7 +62,7 @@
     </div>
   </section>
 
-  <!-- Screen 3: Slot status -->
+
   <section id="screen-slot" class="screen">
     <div class="card">
       <h2>Slot Status</h2>
@@ -81,7 +80,7 @@
     </div>
   </section>
 
-  <!-- Screen 4: Payment -->
+ 
   <section id="screen-payment" class="screen">
     <div class="card">
       <h2>Booking &amp; Payment</h2>
@@ -106,12 +105,174 @@
     </div>
   </section>
 
-  <!-- Screen 5: Confirmation -->
   <section id="screen-done" class="screen">
     <div class="card">
       <h2>Booking Confirmed</h2>
       <p>Slot <b id="done-slot">A-12</b> is reserved for <b id="done-plate"></b>.</p>
       <p>Information sent to the controller. Barrier will open when your vehicle arrives.</p>
+      <button onclick="resetAll()">Done</button>
+    </div>
+  </section>
+
+  <script src="/parking.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Parking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/parking.css" />
+</head>
+<body>
+  <div class="bg-orbs">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <header class="brand">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+    </div>
+    <div>
+      <div class="brand-name">SmartPark</div>
+      <div class="brand-sub">Park smarter, not harder</div>
+    </div>
+  </header>
+
+  <!-- Screen 1: Login / Signup -->
+  <section id="screen-login" class="screen active">
+    <div class="card">
+      <div class="badge">Welcome</div>
+      <h2 id="login-title">Login - Smart Parking</h2>
+      <p class="lede">Sign in to reserve your perfect spot in seconds.</p>
+
+      <div id="name-field" style="display:none;">
+        <label>Name</label>
+        <input type="text" id="name" placeholder="Your full name" />
+      </div>
+
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@example.com" />
+
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" />
+
+      <button onclick="goToVehicle()" id="login-btn">Login</button>
+
+      <p class="switch">
+        <span id="switch-text">New user?</span>
+        <a href="#" onclick="toggleSignup(event)" id="switch-link">Sign up</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Screen 2: Vehicle form -->
+  <section id="screen-vehicle" class="screen">
+    <div class="card">
+      <div class="badge">Step 1 of 3</div>
+      <h2>Vehicle &amp; Booking Details</h2>
+      <p class="lede">Tell us what you're driving and when.</p>
+
+      <label>Owner Name</label>
+      <input type="text" id="owner" placeholder="Owner full name" />
+
+      <label>Vehicle Type</label>
+      <select id="vtype">
+        <option value="car">Car</option>
+        <option value="bike">Bike</option>
+      </select>
+
+      <label>Number Plate</label>
+      <input type="text" id="plate" placeholder="e.g. KA01AB1234" />
+
+      <label>Vehicle Model</label>
+      <input type="text" id="model" placeholder="e.g. Honda City" />
+
+      <label>Booking Time</label>
+      <input type="datetime-local" id="btime" />
+
+      <label>Duration (hours)</label>
+      <input type="number" id="duration" value="1" min="1" />
+
+      <button onclick="checkSlot()">Check Slot Availability</button>
+    </div>
+  </section>
+
+  <!-- Screen 3: Slot status -->
+  <section id="screen-slot" class="screen">
+    <div class="card">
+      <div class="badge">Step 2 of 3</div>
+      <h2>Slot Status</h2>
+      <div id="slot-yes">
+        <div class="status-hero ok-hero">
+          <div class="status-icon">✓</div>
+          <p class="ok">Slot Available!</p>
+        </div>
+        <div class="summary">
+          <p><span>Slot Number</span><b id="slot-num">A-12</b></p>
+          <p><span>Vehicle</span><b id="slot-veh"></b></p>
+          <p><span>Time</span><b id="slot-time"></b></p>
+        </div>
+        <button onclick="goToPayment()">Proceed to Booking &amp; Payment</button>
+      </div>
+      <div id="slot-no" style="display:none;">
+        <div class="status-hero bad-hero">
+          <div class="status-icon">!</div>
+          <p class="bad">No parking slot available right now.</p>
+        </div>
+        <button onclick="show('screen-vehicle')">Try Again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 4: Payment -->
+  <section id="screen-payment" class="screen">
+    <div class="card">
+      <div class="badge">Step 3 of 3</div>
+      <h2>Booking &amp; Payment</h2>
+      <p class="lede">Secure checkout. Cancel anytime.</p>
+      <div class="summary">
+        <p><span>Slot</span><b id="pay-slot">A-12</b></p>
+        <p><span>Plate</span><b id="pay-plate"></b></p>
+        <p><span>Type</span><b id="pay-type"></b></p>
+        <p><span>Duration</span><b><span id="pay-dur"></span> hr</b></p>
+        <p class="total"><span>Total</span><b>&#8377;<span id="pay-total"></span></b></p>
+      </div>
+
+      <label>Card Number</label>
+      <input type="text" placeholder="1234 5678 9012 3456" />
+
+      <div class="row">
+        <div>
+          <label>Expiry</label>
+          <input type="text" placeholder="MM/YY" />
+        </div>
+        <div>
+          <label>CVV</label>
+          <input type="password" placeholder="123" />
+        </div>
+      </div>
+
+      <button onclick="confirmBooking()" id="pay-btn">Pay &amp; Confirm</button>
+    </div>
+  </section>
+
+  <!-- Screen 5: Confirmation -->
+  <section id="screen-done" class="screen">
+    <div class="card center">
+      <div class="success-ring">
+        <div class="success-check">✓</div>
+      </div>
+      <h2>Booking Confirmed</h2>
+      <p class="lede">Slot <b id="done-slot">A-12</b> is reserved for <b id="done-plate"></b>.</p>
+      <p class="lede muted">Information sent to the controller. The barrier will open automatically when your vehicle arrives.</p>
       <button onclick="resetAll()">Done</button>
     </div>
   </section>
